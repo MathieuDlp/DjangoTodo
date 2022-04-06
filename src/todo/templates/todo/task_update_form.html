@@ -1,0 +1,18 @@
+{% extends "todo/base.html" %}
+
+{% block title %}
+    Update taches
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <label for="title">Nom de la tache</label>
+    <input id="title" name="title" type="text" required maxlength="300"/>
+    <input type="submit" value="Ajouter"/>
+</form>
+
+{% endblock %}

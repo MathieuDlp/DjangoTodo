@@ -1,8 +1,9 @@
 from multiprocessing import context
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import RequestContext, loader
 from .models import Task
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -26,7 +27,7 @@ def index(request):
 
 #optional other create task form
 def taskCreate(request):
-    if request == "POST":
+    if request.method == "POST":
         newTask = Task()
         newTask.title = request.POST["title"]
         if newTask.is_valid():
@@ -35,8 +36,14 @@ def taskCreate(request):
     return HttpResponse(template.render(request))
 
 def taskUpdate(request, pk):
-    if request == "POST":
-        actual_task = Task.objects.get(id =pk)
+    
+    actual_task = Task.objects.get(id=pk)
+    print(actual_task.title)
+    if request.method == "POST":
+        actual_task.title = request.POST["title"]
+        # actual_task.completed = request.POST["completed"]
+        actual_task.save()
+        # return reverse_lazy("index")
+        return redirect("index")
 
-    template = loader.get_template("todo/task_update_form.html")
-    return HttpResponse(template.render(request))
+    return render(request, "todo/task_update_form.html")
